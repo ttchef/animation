@@ -82,6 +82,7 @@ void renderer_draw_shape_opengl(Renderer *renderer, usize index, const Shape* sh
     gl_u32 program = shape->texture == -1 ? renderer->programs[DEFAULT_PROGRAM] : renderer->programs[TEXTURE_PROGRAM];
     glUseProgram(program);
     gl_u32 colorLoc = glGetUniformLocation(program, "uColor");
+    if (shape->texture != -1) glBindTexture(GL_TEXTURE_2D, shape->texture);
     glUniform4f(colorLoc, shape->color.r, shape->color.g, shape->color.b, shape->color.a);
     glBindVertexArray(renderer->VAOS[index]);
     glDrawElements(GL_TRIANGLES, vertexList[index].indiciesSize / sizeof(u32), GL_UNSIGNED_INT, 0);
