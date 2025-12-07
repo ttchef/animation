@@ -97,6 +97,7 @@ bool renderer_init(Renderer* renderer, GLADloadproc loader) {
     renderer->VAOS = darrayCreate(gl_u32*);
     renderer->VBOS = darrayCreate(gl_u32*);
     renderer->EBOS = darrayCreate(gl_u32*);
+    renderer->textures = darrayCreate(gl_u32*);
     renderer->programs = darrayCreate(gl_u32*);
 
     renderer_setup_basic_shapes(renderer);
