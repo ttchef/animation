@@ -69,7 +69,7 @@ void renderer_setup_basic_shapes(Renderer *renderer) {
     }
 }
 
-void renderer_draw_triangle(Renderer *renderer, usize index, Color color) {
+void renderer_draw_shape_opengl(Renderer *renderer, usize index, Color color) {
     glUseProgram(renderer->shaderProgram);
     gl_u32 colorLoc = glGetUniformLocation(renderer->shaderProgram, "uColor");
     glUniform4f(colorLoc, color.r, color.g, color.b, color.a);
@@ -80,10 +80,10 @@ void renderer_draw_triangle(Renderer *renderer, usize index, Color color) {
 void renderer_draw_shape(Renderer* renderer, const Shape* shape) {
     switch(shape->type) {
         case SHAPE_TYPE_TRIANLGE:
-            renderer_draw_triangle(renderer, TRIANGLE_INDEX, shape->color);
+            renderer_draw_shape_opengl(renderer, TRIANGLE_INDEX, shape->color);
             break;
         case SHAPE_TYPE_RECTANGLE:
-            renderer_draw_triangle(renderer, RECTANGLE_INDEX, shape->color);
+            renderer_draw_shape_opengl(renderer, RECTANGLE_INDEX, shape->color);
             break;
     }
 }
