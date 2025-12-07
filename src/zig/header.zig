@@ -21,6 +21,14 @@ pub export fn tokenizer_current(tokenizer: *Tokenizer, buffer: [*:0]u8) Error {
     return 0;
 }
 
+pub export fn tokenizer_start(tokenizer: *Tokenizer) usize {
+    return tokenizer.end;
+}
+
+pub export fn tokenizer_end(tokenizer: *Tokenizer) usize {
+    return tokenizer.end;
+}
+
 test Tokenizer {
     var tokenizer: Tokenizer = undefined;
     const str: [*:0]const u8 = "Hello, world!";

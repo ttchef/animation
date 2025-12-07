@@ -2,12 +2,9 @@
 #define TOKENIZER_H
 
 #include <stdint.h>
+#include <stdlib.h>
 
-typedef struct Tokenizer {
-    const char* src;
-    size_t start;
-    size_t end;
-} Tokenizer;
+typedef struct Tokenizer {} Tokenizer;
 
 typedef uint8_t Token;
 
@@ -48,5 +45,8 @@ void tokenizer_init(Tokenizer* tokenizer, char* slice);
 Token tokenizer_next(Tokenizer* tokenizer);
 
 char* tokenizer_current(Tokenizer* tokenizer);
+
+size_t tokenizer_start(Tokenizer* tokenizer);
+size_t tokenizer_end(Tokenizer* tokenizer);
 
 #endif // TOKENIZER_H
