@@ -35,6 +35,7 @@ pub fn build(b: *std.Build) void {
 
     exe.addIncludePath(b.path("include/"));
     exe.addIncludePath(b.path("libs/glad/include/"));
+    exe.addIncludePath(b.dependency("stb", .{}).path("."));
 
     exe.addCSourceFiles(.{
         .root = b.path("src/"),
