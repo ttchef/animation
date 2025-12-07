@@ -30,6 +30,10 @@ pub fn build(b: *std.Build) void {
         .root = b.path("src/"),
         .files = &.{
             "main.c",
+            "utils.c",
+            "renderer/renderer.c",
+            "renderer/shapes.c",
+            "containers/darray.c",
         },
     });
 

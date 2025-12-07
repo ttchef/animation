@@ -3,23 +3,29 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 
+#include <renderer/renderer.h> 
+
 int main(void) {
-    // Initialize GLFW
+    RendererContext renderContext = { 
+        .windowWidth = 800,
+        .windowHeight = 600,
+    };
+
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
         return -1;
     }
 
-
-    // Create a windowed mode window and its OpenGL context
-    GLFWwindow* window = glfwCreateWindow(800, 600, "GLFW C Example", NULL, NULL);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    GLFWwindow* window = glfwCreateWindow(renderContext.windowWidth, renderContext.windowHeight, "Animation", NULL, NULL);
     if (!window) {
         fprintf(stderr, "Failed to create GLFW window\n");
         glfwTerminate();
         return -1;
     }
 
-    // Make the window's context current
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -27,24 +33,22 @@ int main(void) {
         return -1;
     }
 
-    // Main loop
+    renderer_init(&renderContext);
+    glfwSetWindowUserPointer(window, &renderContext);
+    glfwSetFramebufferSizeCallback(window, renderer_framebuffer_size_callback);
+
     while (!glfwWindowShouldClose(window)) {
-        // Close on ESC
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, 1);
         }
 
-        // Clear the screen
         glClear(GL_COLOR_BUFFER_BIT);
+        renderer_draw_triangle(&renderContext);
 
-        // Swap front and back buffers
         glfwSwapBuffers(window);
-
-        // Poll for and process events
         glfwPollEvents();
     }
 
-    // Cleanup
     glfwDestroyWindow(window);
     glfwTerminate();
 
