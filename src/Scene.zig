@@ -32,6 +32,8 @@ pub fn construct(self: *@This(), tokenizer: *Tokenizer) !void {
         .identifier => {
             if (std.meta.stringToEnum(Actor.Tag, tokenizer.lexeme())) |actor_tag| switch (actor_tag) {
                 .shape => {
+                    const token = tokenizer.next() orelse return error.MissingIdentifier;
+                    if (token != .identifier) return error.TokenMustBeIdentifier;
                     std.debug.print("Shape: {s}\n", .{tokenizer.lexeme()});
                 },
             };

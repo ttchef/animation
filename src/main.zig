@@ -3,6 +3,7 @@ const c = @import("c");
 const yes = @import("yes");
 const Tokenizer = @import("Tokenizer.zig");
 const Scene = @import("Scene.zig");
+const glfw = @import("glfw");
 
 pub fn main() !void {
     var gpa: std.heap.DebugAllocator(.{}) = .init;

@@ -86,6 +86,10 @@ pub fn next(self: *@This()) ?Token {
     return @enumFromInt(self.slice[self.end - 1]);
 }
 
+pub fn skip(self: *@This()) bool {
+    return self.next() != null;
+}
+
 pub fn lexeme(self: @This()) []const u8 {
     return self.slice[self.start..self.end];
 }
