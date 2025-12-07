@@ -4,10 +4,10 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const parser = b.addLibrary(.{
-        .name = "parser",
+    const zig = b.addLibrary(.{
+        .name = "zig",
         .root_module = b.createModule(.{
-            .root_source_file = b.path("src/parser/parser.zig"),
+            .root_source_file = b.path("src/zig/root.zig"),
             .target = target,
             .optimize = optimize,
             .link_libc = true,
@@ -32,7 +32,7 @@ pub fn build(b: *std.Build) void {
 
     exe.addIncludePath(b.path("include/"));
 
-    exe.linkLibrary(parser);
+    exe.linkLibrary(zig);
 
     b.installArtifact(exe);
 
