@@ -1,4 +1,4 @@
-#include <zig/tokanizer.h>
+#include <zig/tokenizer.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
@@ -43,7 +43,7 @@ int main(void) {
         }
 
         glClear(GL_COLOR_BUFFER_BIT);
-        renderer_draw_triangle(&renderContext);
+        renderer_draw_triangle(&renderContext, (Color){0.7f, 0.2f, 0.1f, 1.0f});
 
         glfwSwapBuffers(window);
         glfwPollEvents();
