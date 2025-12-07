@@ -3,9 +3,9 @@
 #define RENDERER_H
 
 #include <stdint.h> 
+#include <stdbool.h>
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include <renderer/shapes.h> 
 
@@ -19,8 +19,7 @@ typedef struct RendererContext {
     uint32_t shaderProgram;
 } RendererContext;
 
-void renderer_init(RendererContext* rendererContext);
-void renderer_framebuffer_size_callback(GLFWwindow* window, int32_t width, int32_t height);
+bool renderer_init(RendererContext* rendererContext);
 
 
 #endif

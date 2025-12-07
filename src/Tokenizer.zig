@@ -86,14 +86,6 @@ pub fn next(self: *@This()) ?Token {
     return @enumFromInt(self.slice[self.end - 1]);
 }
 
-test "tokanize" {
-    const slice =
-        \\    include ball1;
-        \\} () []
-        \\<>
-    ;
-    var tokenizer: @This() = .{ .slice = slice };
-    while (tokenizer.next()) |kind| {
-        std.debug.print("{t} {s}\n", .{ kind, tokenizer.slice[tokenizer.start..tokenizer.end] });
-    }
+pub fn lexeme(self: @This()) []const u8 {
+    return self.slice[self.start..self.end];
 }

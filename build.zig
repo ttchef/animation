@@ -4,33 +4,25 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const glfw = b.dependency("glfw", .{ .target = target, .optimize = optimize });
-
-    const zig = b.addLibrary(.{
-        .name = "zig",
-        .root_module = b.createModule(.{
-            .root_source_file = b.path("src/zig/root.zig"),
-            .target = target,
-            .optimize = optimize,
-            .link_libc = true,
-        }),
-    });
+    const yes = b.dependency("yes", .{ .target = target, .optimize = optimize }).module("yes");
 
     const exe = b.addExecutable(.{
         .name = "animation",
         .root_module = b.createModule(.{
+            .root_source_file = b.path("src/main.zig"),
             .target = target,
             .optimize = optimize,
+            .imports = &.{
+                .{ .name = "yes", .module = yes },
+            },
             .link_libc = true,
         }),
-        .use_llvm = true,
     });
 
+    // TODO: add back later
     exe.addCSourceFiles(.{
         .root = b.path("src/"),
         .files = &.{
-            "main.c",
-            "utils.c",
             "renderer/renderer.c",
             "renderer/shapes.c",
             "containers/darray.c",
@@ -41,10 +33,6 @@ pub fn build(b: *std.Build) void {
 
     exe.addIncludePath(b.path("include/"));
     exe.addIncludePath(b.path("libs/glad/include/"));
-    exe.addIncludePath(glfw.path("include/"));
-
-    exe.linkLibrary(zig);
-    exe.linkLibrary(glfw.artifact("glfw"));
 
     b.installArtifact(exe);
 
@@ -52,5 +40,5 @@ pub fn build(b: *std.Build) void {
     const run_cmd = b.addRunArtifact(exe);
     run_step.dependOn(&run_cmd.step);
     run_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| run_cmd.addArgs(args);
+    run_cmd.addArgs(b.args orelse &.{ "--xdg=x11", "lang.lua" });
 }
