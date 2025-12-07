@@ -29,7 +29,7 @@ pub fn main() !void {
     var reader = source_file.reader(io, source_file_slice);
     source_file_slice = try reader.interface.take(source_file_slice.len);
 
-    var tokenizer: Tokenizer = .{ .slice = source_file_slice };
+    var tokenizer: Tokenizer = .{ .slice = source_file_slice, .file_path = source_file_name };
 
     var scene: Scene = try .init(allocator);
     defer scene.deinit(allocator);
