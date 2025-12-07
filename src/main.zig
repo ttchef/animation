@@ -53,7 +53,7 @@ pub fn main() !void {
             },
             else => {},
         };
-        c.renderer_draw_triangle(&renderer);
+        c.renderer_draw_triangle(&renderer, c.COLOR(0.1, 0.9, 0.1, 1.0));
         try yes.opengl.swapBuffers(window);
     }
 }
