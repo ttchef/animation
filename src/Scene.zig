@@ -29,6 +29,13 @@ pub fn deinit(_: @This(), allocator: std.mem.Allocator) void {
 pub fn construct(self: *@This(), tokenizer: *Tokenizer) !void {
     _ = self;
     while (tokenizer.next()) |kind| switch (kind) {
+        .identifier => {
+            if (std.meta.stringToEnum(Actor.Tag, tokenizer.lexeme())) |actor_tag| switch (actor_tag) {
+                .shape => {
+                    std.debug.print("Shape: {s}\n", .{tokenizer.lexeme()});
+                },
+            };
+        },
         else => {},
     };
 }
