@@ -5,8 +5,8 @@
     .minimum_zig_version = "0.16.0-dev.1484+d0ba6642b",
     .dependencies = .{
         .yes = .{
-            .url = "git+https://github.com/HaraldWik/yes#d44ebe9c061d57e6ede3ad74062d19fb9e684f5e",
-            .hash = "yes-0.0.0-pN7MXYIsAQBFyKYmdboXNPO0r9nttw4PNkSeYF-sAaN2",
+            .url = "git+https://github.com/HaraldWik/yes#968744fa478dcec11ee6c40a20e9da9649d5a2fd",
+            .hash = "yes-0.0.0-pN7MXYUsAQAuzG6xTgJsFl8yD-TSvSCMU7BSGk2QZTnU",
         },
     },
     .paths = .{
