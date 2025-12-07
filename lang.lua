@@ -1,23 +1,25 @@
 shape ttchef {
     pos = (90, 30)
+    color = "FFFFAAAA"
     easing = .lerp
-
-    fn dob {
+    
+    action dob 
+    [
         pos = (100, 90)
-    }
+    ]
 
-    fn bob {
+    action bob 
+    [
         easing = .bezier
         pos = (1000, 90)
-    }
+    ]
 }
 
 shape harald {
-
 }
 
 timeline {
-    10-20 harald.visible = 9;
+    10-20 harald.visible = true;
     70-90 call ttchef.dob
     70-90 call ttchef.dob
     90-100 call harald.carAccident
