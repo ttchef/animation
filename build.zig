@@ -33,8 +33,11 @@ pub fn build(b: *std.Build) void {
         },
     });
 
+    exe.addCSourceFile(.{ .file = b.path("libs/glad/src/glad.c") });
+
     exe.addIncludePath(b.path("include/"));
-    exe.addIncludePath(glfw.path("libs/glfw/include/"));
+    exe.addIncludePath(b.path("libs/glad/include/"));
+    exe.addIncludePath(glfw.path("include/"));
 
     exe.linkLibrary(zig);
     exe.linkLibrary(glfw.artifact("glfw"));
