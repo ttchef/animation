@@ -94,9 +94,10 @@ bool renderer_init(Renderer* renderer, GLADloadproc loader) {
 
     glViewport(0, 0, renderer->windowWidth, renderer->windowHeight);
 
-    renderer->VBOS = darrayCreate(uint32_t*);
-    glGenVertexArrays(1, &renderer->VAO);
-    glBindVertexArray(renderer->VAO);
+    renderer->VAOS = darrayCreate(gl_u32*);
+    renderer->VBOS = darrayCreate(gl_u32*);
+    renderer->EBOS = darrayCreate(gl_u32*);
+
     renderer_setup_basic_shapes(renderer);
     renderer_init_shaders(renderer);
 

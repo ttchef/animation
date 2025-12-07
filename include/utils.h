@@ -3,6 +3,7 @@
 #define UTILS_H
 
 #include <glad/glad.h> 
+#include <HandmadeMath.h>
 #include <stdint.h> 
 
 // Normal types
@@ -20,11 +21,16 @@ typedef float f32;
 typedef double f64;
 
 typedef u8 b8;
+typedef size_t usize; // zig enjoyer?
 
 // OpenGL
-typedef GLbyte gl_u8;
-typedef GLshort gl_u16;
-typedef GLint gl_u32;
+typedef GLubyte gl_u8;
+typedef GLushort gl_u16;
+typedef GLuint gl_u32;
+
+typedef GLbyte gl_i8;
+typedef GLshort gl_i16;
+typedef GLint gl_i32;
 
 #if defined(__clang__) || defined(__gcc__)
     #define STATIC_ASSERT _Static_assert

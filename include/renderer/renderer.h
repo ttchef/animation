@@ -11,12 +11,13 @@
 #include <renderer/shapes.h> 
 
 typedef struct Renderer {
-    size_t windowWidth;
-    size_t windowHeight;
+    usize windowWidth;
+    usize windowHeight;
 
     // OpenGL
-    uint32_t VAO;
-    uint32_t* VBOS;
+    gl_u32* VAOS;
+    gl_u32* VBOS;
+    gl_u32* EBOS;
     uint32_t shaderProgram;
 } Renderer;
 
