@@ -1,0 +1,12 @@
+.{
+    .name = .animation,
+    .version = "0.0.0",
+    .fingerprint = 0x8d5284dc93798817,
+    .minimum_zig_version = "0.16.0-dev.1484+d0ba6642b",
+    .dependencies = .{},
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
