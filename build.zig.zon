@@ -8,6 +8,10 @@
             .url = "git+https://github.com/HaraldWik/yes#5c2a1073138a369d18031f2b25996a12f732be1b",
             .hash = "yes-0.0.0-pN7MXZksAQD0FCQPauVK5_sUuLzjj6X840F_6bRqaUsZ",
         },
+        .stb = .{
+            .url = "git+https://github.com/nothings/stb#f1c79c02822848a9bed4315b12c8c8f3761e1296",
+            .hash = "N-V-__8AABQ7TgCnPlp8MP4YA8znrjd6E-ZjpF1rvrS8J_2I",
+        },
     },
     .paths = .{
         "build.zig",

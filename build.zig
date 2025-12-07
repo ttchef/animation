@@ -15,6 +15,7 @@ pub fn build(b: *std.Build) void {
 
     c.addIncludePath(b.path("include/"));
     c.addIncludePath(b.path("libs/glad/include/"));
+    c.addIncludePath(b.dependency("stb", .{}).path("."));
 
     const yes = b.dependency("yes", .{ .target = target, .optimize = optimize }).module("yes");
 
