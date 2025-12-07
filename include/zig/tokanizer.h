@@ -1,6 +1,52 @@
 #ifndef TOKANIZER_H
 #define PARSER_H
 
-void parse();
+#include <stdint.h>
+
+typedef struct Tokanizer {
+    const char* src;
+    size_t start;
+    size_t end;
+} Tokanizer;
+
+typedef uint8_t Token;
+
+enum {
+    TOKEN_EOF = 0, // End of file
+    TOKEN_INVALID = 1,
+    TOKEN_IDENTIFIER = 2,
+    TOKEN_NUMBER_LITERAL = 3,
+    TOKEN_STRING_LITERAL = 4,
+    TOKEN_CHAR_LITERAL = 5,
+
+    TOKEN_DOT = '.',
+    TOKEN_COMMA = ',',
+    TOKEN_COLON = ':',
+    TOKEN_BANG = '!',
+    TOKEN_PIPE = '|',
+    TOKEN_EQUAL = '=',
+    TOKEN_SEMICOLON = ';',
+    TOKEN_AMPERSAND = '&',
+    TOKEN_QUESTION_MARK = '?',
+    TOKEN_PERCENT = '%',
+    TOKEN_PLUS = '+',
+    TOKEN_MINUS = '-',
+    TOKEN_ASTERISK = '*',
+    TOKEN_SLASH = '/',
+    TOKEN_L_PAREN = '(',
+    TOKEN_R_PAREN = ')',
+    TOKEN_L_BRACE = '{',
+    TOKEN_R_BRACE = '}',
+    TOKEN_L_BRACKET = '[',
+    TOKEN_R_BRACKET = ']',
+    TOKEN_L_ANGLE_BRACKET = '<',
+    TOKEN_R_ANGLE_BRACKET = '>',
+};
+
+void tokanizer_init(Tokanizer* tokanizer, char* slice);
+
+Token tokanizer_next(Tokanizer* tokanizer);
+
+char* tokanizer_current(Tokanizer* tokanizer);
 
 #endif // TOKANIZER_H
