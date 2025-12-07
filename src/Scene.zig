@@ -12,8 +12,13 @@ pub const Actor = union(Tag) {
     };
 
     pub const Shape = struct {
-        pos: @Vector(2, f32),
-        color: [8]u8, // hex #FFFFFF
+        pos: @Vector(3, f32) = @splat(0),
+        color: [8]u8 = @splat('F'), // hex #FFFFFFFF
+        easing: Easing = .lerp,
+
+        pub const Easing = enum {
+            lerp,
+        };
     };
 };
 
@@ -22,18 +27,23 @@ pub fn init(allocator: std.mem.Allocator) !@This() {
     return .{};
 }
 
-pub fn deinit(_: @This(), allocator: std.mem.Allocator) void {
-    _ = allocator;
+pub fn deinit(self: @This(), allocator: std.mem.Allocator) void {
+    self.actors.deinit(allocator);
 }
 
-pub fn construct(self: *@This(), tokenizer: *Tokenizer) !void {
-    _ = self;
+pub fn construct(self: *@This(), allocator: std.mem.Allocator, tokenizer: *Tokenizer) !void {
     while (tokenizer.next()) |kind| switch (kind) {
         .identifier => {
             if (std.meta.stringToEnum(Actor.Tag, tokenizer.lexeme())) |actor_tag| switch (actor_tag) {
                 .shape => {
                     const token = tokenizer.next() orelse return error.MissingIdentifier;
                     if (token != .identifier) return error.TokenMustBeIdentifier;
+
+                    const shape_name = tokenizer.lexeme();
+                    var shape: Actor.Shape = .{};
+                    shape.pos = .{ 0, 0, 1 };
+
+                    try self.actors.put(allocator, shape_name, .{ .shape = shape });
                     std.debug.print("Shape: {s}\n", .{tokenizer.lexeme()});
                 },
             };
