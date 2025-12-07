@@ -33,7 +33,7 @@ pub fn main() !void {
 
     var scene: Scene = try .init(allocator);
     defer scene.deinit(allocator);
-    try scene.construct(&tokenizer);
+    try scene.construct(allocator, &tokenizer);
 
     var window: yes.Window = try .open(yes.Window.Config{
         .title = "Animationzzz",
