@@ -1,13 +1,13 @@
-#ifndef TOKANIZER_H
-#define PARSER_H
+#ifndef TOKENIZER_H
+#define TOKENIZER_H
 
 #include <stdint.h>
 
-typedef struct Tokanizer {
+typedef struct Tokenizer {
     const char* src;
     size_t start;
     size_t end;
-} Tokanizer;
+} Tokenizer;
 
 typedef uint8_t Token;
 
@@ -43,10 +43,10 @@ enum {
     TOKEN_R_ANGLE_BRACKET = '>',
 };
 
-void tokanizer_init(Tokanizer* tokanizer, char* slice);
+void tokenizer_init(Tokenizer* tokenizer, char* slice);
 
-Token tokanizer_next(Tokanizer* tokanizer);
+Token tokenizer_next(Tokenizer* tokenizer);
 
-char* tokanizer_current(Tokanizer* tokanizer);
+char* tokenizer_current(Tokenizer* tokenizer);
 
-#endif // TOKANIZER_H
+#endif // TOKENIZER_H

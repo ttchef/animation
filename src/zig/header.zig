@@ -1,35 +1,35 @@
 const std = @import("std");
 
 pub const Error = i32;
-pub const Tokanizer = @import("Tokanizer.zig");
+pub const Tokenizer = @import("Tokenizer.zig");
 
-pub export fn tokanizer_init(tokanizer: *Tokanizer, slice: [*:0]const u8) void {
-    tokanizer.* = .{
+pub export fn tokenizer_init(tokenizer: *Tokenizer, slice: [*:0]const u8) void {
+    tokenizer.* = .{
         .slice = std.mem.span(slice),
     };
 }
 
-pub export fn tokanizer_next(tokanizer: *Tokanizer) Tokanizer.Token {
-    return tokanizer.next() orelse .eof;
+pub export fn tokenizer_next(tokenizer: *Tokenizer) Tokenizer.Token {
+    return tokenizer.next() orelse .eof;
 }
 
-pub export fn tokanizer_current(tokanizer: *Tokanizer, buffer: [*:0]u8) Error {
-    const len = tokanizer.end - tokanizer.start;
+pub export fn tokenizer_current(tokenizer: *Tokenizer, buffer: [*:0]u8) Error {
+    const len = tokenizer.end - tokenizer.start;
     if (std.mem.len(buffer) <= len) return 1;
-    @memcpy(buffer[0..len], tokanizer.slice[tokanizer.start..tokanizer.end]);
+    @memcpy(buffer[0..len], tokenizer.slice[tokenizer.start..tokenizer.end]);
     buffer[len] = 0;
     return 0;
 }
 
-test Tokanizer {
-    var tokanizer: Tokanizer = undefined;
+test Tokenizer {
+    var tokenizer: Tokenizer = undefined;
     const str: [*:0]const u8 = "Hello, world!";
-    tokanizer_init(&tokanizer, str);
+    tokenizer_init(&tokenizer, str);
     while (true) {
-        const token = tokanizer_next(&tokanizer);
+        const token = tokenizer_next(&tokenizer);
         if (token == .eof) break;
         var current: [128:0]u8 = undefined;
-        _ = tokanizer_current(&tokanizer, current[0..].ptr);
+        _ = tokenizer_current(&tokenizer, current[0..].ptr);
         std.debug.print("{t} {s}\n", .{ token, current[0..].ptr });
     }
 }

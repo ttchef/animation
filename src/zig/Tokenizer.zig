@@ -92,8 +92,8 @@ test "tokanize" {
         \\} () []
         \\<>
     ;
-    var tokanizer: @This() = .{ .slice = slice };
-    while (tokanizer.next()) |kind| {
-        std.debug.print("{t} {s}\n", .{ kind, tokanizer.slice[tokanizer.start..tokanizer.end] });
+    var tokenizer: @This() = .{ .slice = slice };
+    while (tokenizer.next()) |kind| {
+        std.debug.print("{t} {s}\n", .{ kind, tokenizer.slice[tokenizer.start..tokenizer.end] });
     }
 }
