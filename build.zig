@@ -4,6 +4,18 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const c = b.addTranslateC(.{
+        .root_source_file = b.addWriteFiles().add("c.h",
+            \\#include <renderer/renderer.h>
+            \\#include <renderer/shapes.h>
+        ),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    c.addIncludePath(b.path("include/"));
+    c.addIncludePath(b.path("libs/glad/include/"));
+
     const yes = b.dependency("yes", .{ .target = target, .optimize = optimize }).module("yes");
 
     const exe = b.addExecutable(.{
@@ -13,13 +25,16 @@ pub fn build(b: *std.Build) void {
             .target = target,
             .optimize = optimize,
             .imports = &.{
+                .{ .name = "c", .module = c.createModule() },
                 .{ .name = "yes", .module = yes },
             },
             .link_libc = true,
         }),
     });
 
-    // TODO: add back later
+    exe.addIncludePath(b.path("include/"));
+    exe.addIncludePath(b.path("libs/glad/include/"));
+
     exe.addCSourceFiles(.{
         .root = b.path("src/"),
         .files = &.{
@@ -30,9 +45,6 @@ pub fn build(b: *std.Build) void {
     });
 
     exe.addCSourceFile(.{ .file = b.path("libs/glad/src/glad.c") });
-
-    exe.addIncludePath(b.path("include/"));
-    exe.addIncludePath(b.path("libs/glad/include/"));
 
     b.installArtifact(exe);
 

@@ -4,11 +4,11 @@
 
 #include <stdint.h>
 
-struct RendererContext;
+struct Renderer;
 
 extern float triangle_vertices[9];
 
-void renderer_setup_basic_shapes(struct RendererContext* renderContext);
-void renderer_draw_triangle(struct RendererContext* renderContext);
+void renderer_setup_basic_shapes(struct Renderer* renderer);
+void renderer_draw_triangle(struct Renderer* renderer);
 
 #endif

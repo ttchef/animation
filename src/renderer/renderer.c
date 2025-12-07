@@ -32,14 +32,13 @@ char* readFileToString(const char *path) {
     return buf;
 }
 
-void renderer_framebuffer_size_callback(GLFWwindow* window, int32_t width, int32_t height) {
-    RendererContext* renderContext = glfwGetWindowUserPointer(window);
-    renderContext->windowWidth = width;
-    renderContext->windowHeight = height;
+void renderer_resize(Renderer* renderer, size_t width, size_t height) {
+    renderer->windowWidth = width;
+    renderer->windowHeight = height;
     glViewport(0, 0, width, height);
 }
 
-void renderer_init_shaders(RendererContext* renderContext) {
+void renderer_init_shaders(Renderer* renderer) {
     const char* vertexShaderString = readFileToString("src/renderer/shaders/default_vertex.glsl");
     uint32_t vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderString, NULL);
@@ -71,35 +70,35 @@ void renderer_init_shaders(RendererContext* renderContext) {
         return;
     }
 
-    renderContext->shaderProgram = glCreateProgram();
-    glAttachShader(renderContext->shaderProgram, vertexShader);
-    glAttachShader(renderContext->shaderProgram, fragmentShader);
-    glLinkProgram(renderContext->shaderProgram);
+    renderer->shaderProgram = glCreateProgram();
+    glAttachShader(renderer->shaderProgram, vertexShader);
+    glAttachShader(renderer->shaderProgram, fragmentShader);
+    glLinkProgram(renderer->shaderProgram);
 
-    glGetProgramiv(renderContext->shaderProgram, GL_LINK_STATUS, &success);
+    glGetProgramiv(renderer->shaderProgram, GL_LINK_STATUS, &success);
     if(!success) {
-        glGetProgramInfoLog(renderContext->shaderProgram, 512, NULL, infoLog);
+        glGetProgramInfoLog(renderer->shaderProgram, 512, NULL, infoLog);
         fprintf(stderr, "Failed to link shaders: %s\n", infoLog);
         free((void*)vertexShaderString);
         free((void*)fragmentShaderString);
         return;
     }
 
-    glUseProgram(renderContext->shaderProgram);
+    glUseProgram(renderer->shaderProgram);
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 }
 
-bool renderer_init(RendererContext* rendererContext) {
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) return true;
+bool renderer_init(Renderer* renderer, GLADloadproc loader) {
+    if (!gladLoadGLLoader(loader)) return true;
 
-    glViewport(0, 0, rendererContext->windowWidth, rendererContext->windowHeight);
+    glViewport(0, 0, renderer->windowWidth, renderer->windowHeight);
 
-    rendererContext->VBOS = darrayCreate(uint32_t*);
-    glGenVertexArrays(1, &rendererContext->VAO);
-    glBindVertexArray(rendererContext->VAO);
-    renderer_setup_basic_shapes(rendererContext);
-    renderer_init_shaders(rendererContext);
+    renderer->VBOS = darrayCreate(uint32_t*);
+    glGenVertexArrays(1, &renderer->VAO);
+    glBindVertexArray(renderer->VAO);
+    renderer_setup_basic_shapes(renderer);
+    renderer_init_shaders(renderer);
 
     return false;
 }

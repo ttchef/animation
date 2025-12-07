@@ -1,4 +1,5 @@
 const std = @import("std");
+const c = @import("c");
 const yes = @import("yes");
 const Tokenizer = @import("Tokenizer.zig");
 const Scene = @import("Scene.zig");
@@ -40,10 +41,22 @@ pub fn main() !void {
     defer window.close();
     try yes.opengl.makeCurrent(window);
 
+    var renderer: c.Renderer = undefined;
+    if (c.renderer_init(&renderer, @ptrCast(&getProcAddress))) return error.InitRenderer;
+
     main_loop: while (true) {
         while (try window.poll()) |event| switch (event) {
             .close => break :main_loop,
+            .resize => |size| {
+                c.renderer_resize(&renderer, size.width, size.height);
+            },
             else => {},
         };
+        c.renderer_draw_triangle(&renderer);
+        try yes.opengl.swapBuffers(window);
     }
+}
+
+pub fn getProcAddress(procname: [*:0]const u8) callconv(.c) ?yes.opengl.Proc {
+    return yes.opengl.getProcAddress(procname);
 }
