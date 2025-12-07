@@ -2,4 +2,4 @@ comptime {
     _ = @import("header.zig");
 }
 
-const Tokanizer = @import("Tokanizer.zig");
+const Tokenizer = @import("Tokenizer.zig");
