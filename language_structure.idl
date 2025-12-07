@@ -1,0 +1,369 @@
+// ==========================================
+// IMPROVED ANIMATION LANGUAGE STRUCTURE
+// ==========================================
+// Focus: Consistent syntax, clean structure, intuitive patterns
+
+// ===== SECTION: USER-DEFINED GLOBALS =====
+// Built-in constants available everywhere:
+// Time: second, minute, hour, ms, s
+// Math: PI, E, TAU, INFINITY
+// Colors: BLACK, WHITE, RED, GREEN, BLUE, YELLOW, CYAN, MAGENTA
+// Functions: sin, cos, tan, abs, sqrt, pow, min, max, clamp, lerp, smoothstep
+
+global {
+    // User-defined constants
+    CANVAS_WIDTH = 800;
+    CANVAS_HEIGHT = 600;
+    ANIMATION_FPS = 60;
+
+    // User-defined colors
+    PRIMARY_COLOR = "#4A90E2";
+    ACCENT_COLOR = "#E24A4A";
+
+    // User-defined functions
+    fn wobble(x) = sin(x * 2) * 50;
+    fn bounce(t) = abs(sin(t * PI)) * 30;
+}
+
+// ===== SECTION: TIMELINE =====
+timeline {
+    duration = 5 second;
+    loop = true;
+    fps = ANIMATION_FPS;
+
+    // Keyframe syntax: property @ time = value [easing]
+    // Built-in easing: linear, ease-in, ease-out, ease-in-out, bounce, elastic, back
+}
+
+// ===== SECTION: KEYFRAME PATTERNS =====
+
+// PATTERN 1: Timeline-based keyframes
+// Simple, readable time-based animation
+shape ball1 {
+    type = circle;
+    radius = 20;
+    color = BLUE;
+
+    // Syntax: property @ time = value
+    x @ 0s = 100;
+    x @ 2s = 500;
+    x @ 5s = 100;
+
+    y @ 0s = 300;
+    y @ 2s = 300;
+    y @ 5s = 300;
+
+    // Multiple properties at same time
+    @ 1s {
+        radius = 30;
+        color = RED;
+    }
+}
+
+// PATTERN 2: Expression-based animation
+// Mathematical expressions over time (built-in functions)
+shape ball2 {
+    type = circle;
+    radius = 20;
+    color = GREEN;
+
+    // Syntax: property = expression(time)
+    x = 300 + cos(t * 2) * 100;
+    y = 300 + sin(t * 3) * 50;
+    radius = 20 + abs(sin(t * 4)) * 10;
+}
+
+// PATTERN 3: Combined approach
+// Mix keyframes and expressions
+shape ball3 {
+    type = circle;
+    radius = 20;
+    color = BLUE;
+
+    // Position uses keyframes
+    x @ 0s = 100;
+    x @ 5s = 500;
+
+    // Size uses expression with user-defined function
+    y = 300 + wobble(t);
+    radius = 20 + bounce(t);
+}
+
+// PATTERN 4: Animation blocks with easing
+// Explicit animation definitions
+shape ball4 {
+    type = circle;
+    radius = 20;
+    color = RED;
+
+    anim move_horizontal {
+        property: x;
+        keyframes: [
+            {time: 0s, value: 100, easing: ease-in},
+            {time: 2s, value: 400, easing: ease-out},
+            {time: 5s, value: 100, easing: linear}
+        ];
+    }
+
+    anim scale_bounce {
+        property: radius;
+        keyframes: [
+            {time: 0s, value: 20},
+            {time: 1s, value: 40, easing: bounce},
+            {time: 2s, value: 20}
+        ];
+    }
+}
+
+// PATTERN 5: Path-based animation
+// Define motion paths
+shape ball5 {
+    type = circle;
+    radius = 20;
+    color = GREEN;
+
+    // Path syntax
+    path = circle(center: {300, 300}, radius: 150, duration: 3s, easing: linear);
+    // Alternative: bezier path
+    // path = bezier([{100, 100}, {200, 50}, {400, 450}, {500, 300}], 3s);
+}
+
+// ===== SECTION: COMPLEX PROPERTY SYNTAX =====
+
+// Nested properties using dot notation
+shape styled_ball {
+    type = circle;
+    radius = 30;
+
+    // Color properties (using built-in colors)
+    fill.color = BLUE;
+    fill.opacity = 0.8;
+
+    stroke.enabled = true;
+    stroke.color = WHITE;
+    stroke.width = 2;
+
+    // Shadow properties
+    shadow.enabled = true;
+    shadow.color = BLACK;
+    shadow.offset = {5, 5};
+    shadow.blur = 10;
+}
+
+// Array-based syntax for multiple values
+shape multi_ball {
+    type = circle;
+
+    // Multiple colors over time
+    fill.color @ 0s = [BLUE];
+    fill.color @ 1s = [BLUE, RED];
+    fill.color @ 2s = [RED, GREEN];
+    fill.color @ 3s = [GREEN, BLUE];
+    fill.color @ 4s = [BLUE];
+}
+
+// ===== SECTION: FUNCTION DEFINITIONS =====
+
+// Clean function syntax
+fn oscillate(base, amplitude, frequency, time) {
+    return base + sin(time * frequency) * amplitude;
+}
+
+fn ease_in_out(t) {
+    return t < 0.5 ? 2 * t * t : 1 - 2 * (1 - t) * (1 - t);
+}
+
+fn bounce_ease(t) {
+    // Custom easing function
+    if (t < 1/2.75) return 7.5625 * t * t;
+    if (t < 2/2.75) return 7.5625 * (t -= 1.5/2.75) * t + 0.75;
+    if (t < 2.5/2.75) return 7.5625 * (t -= 2.25/2.75) * t + 0.9375;
+    return 7.5625 * (t -= 2.625/2.75) * t + 0.984375;
+}
+
+// ===== SECTION: ANIMATION PATTERNS =====
+
+// Pattern: Repeating animations
+shape repeating_ball {
+    type = circle;
+    radius = 20;
+    color = BLUE;
+
+    // Loop syntax
+    x = 100 + sin(t * 2) * 200;  // Continuous oscillation
+
+    // Or explicit loop
+    anim bounce {
+        property: y;
+        loop: true;
+        duration: 1s;
+        keyframes: [
+            {time: 0%, value: 300},
+            {time: 50%, value: 200},
+            {time: 100%, value: 300}
+        ];
+    }
+}
+
+// Pattern: Sequential animations
+shape sequential_ball {
+    type = circle;
+    radius = 20;
+    x = 300;
+    y = 300;
+
+    // Sequential keyframes
+    @ 0s { color = BLUE; }
+    @ 1s { color = RED; }
+    @ 2s { color = GREEN; }
+    @ 3s { color = BLUE; }
+
+    // Or sequential animation blocks
+    anim step1 {
+        property: radius;
+        keyframes: [{time: 0s, value: 20}, {time: 1s, value: 40}];
+    }
+
+    anim step2 {
+        property: radius;
+        keyframes: [{time: 1s, value: 40}, {time: 2s, value: 20}];
+    }
+}
+
+// ===== SECTION: COMPOSITION =====
+
+// Layer composition syntax
+layer background {
+    z = -1;
+    opacity = 1.0;
+
+    include sky_gradient;
+    include stars;
+}
+
+layer main {
+    z = 0;
+    opacity = 1.0;
+
+    include ball1;
+    include ball2;
+    include ball3;
+}
+
+layer effects {
+    z = 1;
+    opacity = 0.5;
+    blend = "add";
+
+    include glow_effects;
+}
+
+// ===== SECTION: SYNTAX CONSISTENCY =====
+
+// Property assignment patterns:
+// 1. Static value: property = value
+// 2. Keyframe: property @ time = value
+// 3. Expression: property = expression(t)
+// 4. Animation block: anim name { ... }
+
+// Object patterns:
+// 1. Simple: shape name { type = circle; ... }
+// 2. Nested: object.property = value
+// 3. Array: property = [value1, value2]
+// 4. Time-based: property @ time = [values]
+
+// Function patterns:
+// 1. Definition: fn name(params) { return expression; }
+// 2. Usage: property = name(args)
+// 3. Chaining: property = fn1(fn2(t))
+
+// Time patterns:
+// 1. Absolute: 1s, 2.5s, 500ms
+// 2. Relative: 10%, 50%, 100%
+// 3. Variables: DURATION * 0.5, t + DELAY
+
+// ===== SECTION: CLEAN EXAMPLES =====
+
+// Clean, readable animation
+shape clean_example {
+    type = circle;
+    radius = 25;
+    color = BLUE;
+
+    // Simple horizontal motion
+    x @ 0s = 100;
+    x @ 2s = 500 ease-in;
+    x @ 4s = 100 ease-out;
+
+    // Simple vertical oscillation
+    y = 300 + sin(t * 3) * 50;
+
+    // Simple size pulse
+    radius = 25 + abs(sin(t * 4)) * 10;
+}
+
+// Complex but structured example
+shape structured_example {
+    type = circle;
+    radius = 20;
+
+    // Position: path-based
+    path = circle({300, 300}, 150, 4s);
+
+    // Appearance: time-based
+    fill.color = interpolate([BLUE, RED, GREEN], t * 3);
+    fill.opacity = 0.5 + sin(t * 2) * 0.3;
+
+    // Effects: conditional
+    if (t > 2s and t < 3s) {
+        stroke.enabled = true;
+        stroke.width = 3;
+        stroke.color = WHITE;
+    }
+}
+
+// ===== SECTION: KEY IMPROVEMENTS =====
+
+/*
+Structural improvements made:
+
+1. CONSISTENT SYNTAX PATTERNS
+   - All property assignments follow clear patterns
+   - Time annotations use @ symbol consistently
+   - Function definitions use fn keyword
+
+2. CLEAR KEYFRAME NOTATION
+   - property @ time = value [easing]
+   - Multiple properties can be grouped: @ time { ... }
+   - Easing functions are optional and named clearly
+
+3. EXPRESSION-BASED ANIMATION
+   - property = expression(t) for mathematical animations
+   - Clean function definitions with return statements
+   - Built-in mathematical functions
+
+4. PATH-BASED ANIMATION
+   - path = type(parameters) syntax
+   - Circle, bezier, and other path types
+   - Duration and easing built into path
+
+5. NESTED PROPERTIES
+   - object.property notation for complex properties
+   - Clear hierarchy (fill.color, stroke.width, etc.)
+   - Array support for multi-value properties
+
+6. COMPOSITION SYSTEM
+   - Layer-based composition with z-ordering
+   - Blend modes and opacity control
+   - Include syntax for reusing elements
+
+7. TIME MANAGEMENT
+   - Multiple time formats (1s, 500ms, 50%)
+   - Mathematical time expressions
+   - Duration and delay controls
+
+8. CLEAN BLOCK STRUCTURE
+   - Consistent indentation and bracketing
+   - Clear separation of concerns
+   - Logical organization of elements
+*/
