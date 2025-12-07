@@ -1,7 +1,6 @@
 const std = @import("std");
 
-pub fn parse() void {
-    _ = std.c.printf("Hello, world!\n");
+start: usize,
+end: usize,
 
-    _ = @Int(.signed, 10);
-}
+pub fn parse() void {}

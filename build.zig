@@ -4,6 +4,8 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const glfw = b.dependency("glfw", .{ .target = target, .optimize = optimize });
+
     const zig = b.addLibrary(.{
         .name = "zig",
         .root_module = b.createModule(.{
@@ -21,6 +23,7 @@ pub fn build(b: *std.Build) void {
             .optimize = optimize,
             .link_libc = true,
         }),
+        .use_llvm = true,
     });
 
     exe.addCSourceFiles(.{
@@ -31,8 +34,10 @@ pub fn build(b: *std.Build) void {
     });
 
     exe.addIncludePath(b.path("include/"));
+    exe.addIncludePath(glfw.path("libs/glfw/include/"));
 
     exe.linkLibrary(zig);
+    exe.linkLibrary(glfw.artifact("glfw"));
 
     b.installArtifact(exe);
 
