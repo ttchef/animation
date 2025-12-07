@@ -45,6 +45,8 @@ pub fn main() !void {
     var renderer: c.Renderer = undefined;
     if (c.renderer_init(&renderer, @ptrCast(&getProcAddress))) return error.InitRenderer;
 
+    const texture: i32 = c.renderer_load_texture("res/thorfinn.png");
+
     main_loop: while (true) {
         while (try window.poll()) |event| switch (event) {
             .close => break :main_loop,
@@ -53,7 +55,7 @@ pub fn main() !void {
             },
             else => {},
         };
-        c.renderer_draw_shape(&renderer, &.{ .type = 1, .color = c.COLOR(0.8, 0.2, 0.2, 1.0)});
+        c.renderer_draw_shape(&renderer, &.{ .type = 1, .color = c.COLOR(0.8, 0.2, 0.2, 1.0), .texture = texture});
         try yes.opengl.swapBuffers(window);
     }
 }

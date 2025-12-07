@@ -6,6 +6,8 @@
 
 struct Renderer;
 
+typedef i32 TextureID;
+
 typedef enum ShapeType {
     SHAPE_TYPE_TRIANLGE,
     SHAPE_TYPE_RECTANGLE,
@@ -15,6 +17,7 @@ typedef struct Shape {
     ShapeType type;
     HMM_Vec3 pos;
     Color color;
+    TextureID texture; // -1 for no texture
 } Shape;
 
 void renderer_setup_basic_shapes(struct Renderer* renderer);

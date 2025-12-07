@@ -10,6 +10,11 @@
 
 #include <renderer/shapes.h> 
 
+enum {
+    DEFAULT_PROGRAM,
+    TEXTURE_PROGRAM,
+};
+
 typedef struct Renderer {
     usize windowWidth;
     usize windowHeight;
@@ -18,10 +23,12 @@ typedef struct Renderer {
     gl_u32* VAOS;
     gl_u32* VBOS;
     gl_u32* EBOS;
-    uint32_t shaderProgram;
+    gl_u32* textures;
+    gl_u32* programs;
 } Renderer;
 
 bool renderer_init(Renderer* renderer, GLADloadproc loader);
 void renderer_resize(Renderer* renderer, size_t width, size_t height);
+TextureID renderer_load_texture(const char* path);
 
 #endif
