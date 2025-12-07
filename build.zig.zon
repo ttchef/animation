@@ -12,6 +12,10 @@
             .url = "git+https://github.com/nothings/stb#f1c79c02822848a9bed4315b12c8c8f3761e1296",
             .hash = "N-V-__8AABQ7TgCnPlp8MP4YA8znrjd6E-ZjpF1rvrS8J_2I",
         },
+        .handmade_math = .{
+            .url = "git+https://github.com/HandmadeMath/HandmadeMath#142ba3cd9da700e3e599d301bbd27d415ad14626",
+            .hash = "N-V-__8AAKcABACNMJ-W931ffS-WKtSh_CIihaf1Y3rlPBF2",
+        },
     },
     .paths = .{
         "build.zig",

@@ -27,7 +27,7 @@ pub fn init(allocator: std.mem.Allocator) !@This() {
     return .{};
 }
 
-pub fn deinit(self: @This(), allocator: std.mem.Allocator) void {
+pub fn deinit(self: *@This(), allocator: std.mem.Allocator) void {
     self.actors.deinit(allocator);
 }
 

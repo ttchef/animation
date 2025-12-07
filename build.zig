@@ -16,6 +16,7 @@ pub fn build(b: *std.Build) void {
     c.addIncludePath(b.path("include/"));
     c.addIncludePath(b.path("libs/glad/include/"));
     c.addIncludePath(b.dependency("stb", .{}).path("."));
+    c.addIncludePath(b.dependency("handmade_math", .{}).path("."));
 
     const yes = b.dependency("yes", .{ .target = target, .optimize = optimize }).module("yes");
 
@@ -33,9 +34,7 @@ pub fn build(b: *std.Build) void {
         }),
     });
 
-    exe.addIncludePath(b.path("include/"));
-    exe.addIncludePath(b.path("libs/glad/include/"));
-    exe.addIncludePath(b.dependency("stb", .{}).path("."));
+    for (c.include_dirs.items) |include_dir| exe.root_module.include_dirs.append(b.allocator, include_dir) catch @panic("OOM");
 
     exe.addCSourceFiles(.{
         .root = b.path("src/"),
