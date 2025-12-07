@@ -16,8 +16,10 @@ void renderer_setup_basic_shapes(struct RendererContext *renderContext) {
     glEnableVertexAttribArray(0);
 }
 
-void renderer_draw_triangle(RendererContext *renderContext) {
+void renderer_draw_triangle(RendererContext *renderContext, Color color) {
     glUseProgram(renderContext->shaderProgram);
+    int32_t colorLoc = glGetUniformLocation(renderContext->shaderProgram, "uColor");
+    glUniform4f(colorLoc, color.r, color.g, color.b, color.a);
     glBindVertexArray(renderContext->VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }

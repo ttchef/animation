@@ -2,6 +2,7 @@
 #define TOKENIZER_H
 
 #include <stdint.h>
+#include <stdlib.h>
 
 typedef struct Tokenizer {
     const char* src;
