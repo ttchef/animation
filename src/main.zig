@@ -3,7 +3,6 @@ const c = @import("c");
 const yes = @import("yes");
 const Tokenizer = @import("Tokenizer.zig");
 const Scene = @import("Scene.zig");
-const glfw = @import("glfw");
 
 pub fn main() !void {
     var gpa: std.heap.DebugAllocator(.{}) = .init;
@@ -55,7 +54,7 @@ pub fn main() !void {
             },
             else => {},
         };
-        c.renderer_draw_shape(&renderer, &.{ .type = 1, .color = c.COLOR(0.8, 0.2, 0.2, 1.0), .texture = texture});
+        c.renderer_draw_shape(&renderer, &.{ .type = 1, .color = c.COLOR(0.8, 0.2, 0.2, 1.0), .texture = texture });
         try yes.opengl.swapBuffers(window);
     }
 }
