@@ -2,7 +2,7 @@ const std = @import("std");
 const c = @import("c");
 const yes = @import("yes");
 const Tokenizer = @import("Tokenizer.zig");
-const Scene = @import("Scene.zig");
+// const Scene = @import("Scene.zig");
 
 pub fn main() !void {
     var gpa: std.heap.DebugAllocator(.{}) = .init;
@@ -23,16 +23,21 @@ pub fn main() !void {
     const source_file: std.Io.File = try std.Io.Dir.cwd().openFile(io, source_file_name, .{});
     defer source_file.close(io);
 
-    var source_file_slice = try allocator.alloc(u8, @intCast((try source_file.stat(io)).size));
+    var source_file_slice = try allocator.alloc(u8, @intCast((try source_file.stat(io)).size + 1));
     defer allocator.free(source_file_slice);
     var reader = source_file.reader(io, source_file_slice);
-    source_file_slice = try reader.interface.take(source_file_slice.len);
+    source_file_slice = try reader.interface.take(source_file_slice.len - 1);
+    source_file_slice[source_file_slice.len - 1] = 0;
 
-    var tokenizer: Tokenizer = .{ .slice = source_file_slice, .file_path = source_file_name };
+    var tokenizer: Tokenizer = .{ .slice = source_file_slice[0 .. source_file_slice.len - 1 :0] };
+    while (tokenizer.next()) |token| {
+        tokenizer.printInfo(source_file_name);
+        std.debug.print("{t} \"{s}\"\n", .{ token, tokenizer.lexeme() });
+    }
 
-    var scene: Scene = try .init(allocator);
-    defer scene.deinit(allocator);
-    try scene.construct(allocator, &tokenizer);
+    // var scene: Scene = try .init(allocator);
+    // defer scene.deinit(allocator);
+    // try scene.construct(allocator, &tokenizer);
 
     var window: yes.Window = try .open(yes.Window.Config{
         .title = "Animationzzz",

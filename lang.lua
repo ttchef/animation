@@ -1,28 +1,18 @@
-shape ttchef {
-    pos = (90, 30)
-    color = "FFFFAAAA"
-    easing = .lerp
+0s {
+    Camera.pos = 20.0;
+    Scene.color = "FFFFFF";
+}
+
+10s {
+    10s new Hello;
+    Hello.model = "lucas";
+    Hello.easing = .lerp;
+    20s Hello.opacity = 0.1;
+    20s - 40s Hello.pos = 10;
     
-    action dob 
-    [
-        pos = (100, 90)
-    ]
-
-    action bob 
-    [
-        easing = .bezier
-        pos = (1000, 90)
-    ]
 }
 
-shape harald {
+10s {
+    new Lucas;
+    20s Lucas.pos = 20;
 }
-
-timeline {
-    10-20 harald.visible = true;
-    70-90 call ttchef.dob
-    70-90 call ttchef.dob
-    90-100 call harald.carAccident
-}
-
-
