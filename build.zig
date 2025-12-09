@@ -14,6 +14,7 @@ pub fn build(b: *std.Build) void {
     });
 
     c.addIncludePath(b.path("include/"));
+    c.addIncludePath(b.path("libs/"));
     c.addIncludePath(b.path("libs/glad/include/"));
     c.addIncludePath(b.dependency("stb", .{}).path("."));
     c.addIncludePath(b.dependency("handmade_math", .{}).path("."));

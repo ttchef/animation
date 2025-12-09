@@ -4,9 +4,6 @@
 #include <renderer/renderer.h>
 #include <containers/darray.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h> 
-
 #include <stdio.h> 
 
 enum {
@@ -23,10 +20,10 @@ typedef struct VertexList {
 } VertexList;
 
 f32 triangle_vertices[] = {
-    // Pos                  // Tex Coords
-    -0.5f, -0.5f, 0.0f,     0.0f, 0.0f,
-     0.5f, -0.5f, 0.0f,     1.0f, 0.0f,
-     0.0f,  0.5f, 0.0f,     0.5f, 1.0f,
+    // Pos                  // Tex Coords       // Normals
+    -0.5f, -0.5f, 0.0f,     0.0f, 0.0f,         0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, 0.0f,     1.0f, 0.0f,         0.0f, 0.0f, 1.0f,
+     0.0f,  0.5f, 0.0f,     0.5f, 1.0f,         0.0f, 0.0f, 1.0f,
 };
 
 u32 triangle_indices[] = {
@@ -34,10 +31,10 @@ u32 triangle_indices[] = {
 };
 
 f32 rectangle_vertices[] = {
-     0.5f,  0.5f, 0.0f,     1.0f, 1.0f,
-     0.5f, -0.5f, 0.0f,     1.0f, 0.0f,
-    -0.5f, -0.5f, 0.0f,     0.0f, 0.0f,
-    -0.5f,  0.5f, 0.0f,     0.0f, 1.0f,
+     0.5f,  0.5f, 0.0f,     1.0f, 1.0f,     0.0f, 0.0f, 1.0f,
+     0.5f, -0.5f, 0.0f,     1.0f, 0.0f,     0.0f, 0.0f, 1.0f,
+    -0.5f, -0.5f, 0.0f,     0.0f, 0.0f,     0.0f, 0.0f, 1.0f,
+    -0.5f,  0.5f, 0.0f,     0.0f, 1.0f,     0.0f, 0.0f, 1.0f,
 };
 
 u32 rectangle_indices[] = {
@@ -62,11 +59,14 @@ void renderer_setup_shape(Renderer* renderer, u32 index) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, renderer->EBOS[index]);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, vertexList[index].indiciesSize, vertexList[index].indicies, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(f32), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(f32), (void*)(3 * sizeof(f32)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(f32), (void*)(3 * sizeof(f32)));
     glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(f32), (void*)(5 * sizeof(f32)));
+    glEnableVertexAttribArray(2);
 }
 
 void renderer_setup_basic_shapes(Renderer *renderer) {
@@ -82,10 +82,15 @@ void renderer_draw_shape_opengl(Renderer *renderer, usize index, const Shape* sh
     gl_u32 program = shape->texture == -1 ? renderer->programs[DEFAULT_PROGRAM] : renderer->programs[TEXTURE_PROGRAM];
     glUseProgram(program);
     gl_u32 colorLoc = glGetUniformLocation(program, "uColor");
-    if (shape->texture != -1) glBindTexture(GL_TEXTURE_2D, shape->texture);
+    if (shape->texture != -1) glBindTexture(GL_TEXTURE_2D, renderer->textures[shape->texture]);
     glUniform4f(colorLoc, shape->color.r, shape->color.g, shape->color.b, shape->color.a);
     glBindVertexArray(renderer->VAOS[index]);
-    glDrawElements(GL_TRIANGLES, vertexList[index].indiciesSize / sizeof(u32), GL_UNSIGNED_INT, 0);
+    if (shape->mesh.id != -1 && shape->type == SHAPE_TYPE_CUSTOM) {
+        glDrawElements(GL_TRIANGLES, shape->mesh.index_count, GL_UNSIGNED_INT, 0);
+    }
+    else {
+        glDrawElements(GL_TRIANGLES, vertexList[index].indiciesSize / sizeof(u32), GL_UNSIGNED_INT, 0);
+    }
 }
 
 void renderer_draw_shape(Renderer* renderer, const Shape* shape) {
@@ -96,43 +101,11 @@ void renderer_draw_shape(Renderer* renderer, const Shape* shape) {
         case SHAPE_TYPE_RECTANGLE:
             renderer_draw_shape_opengl(renderer, RECTANGLE_INDEX, shape);
             break;
+        case SHAPE_TYPE_CUSTOM:
+            if (shape->mesh.id == -1) return;
+            renderer_draw_shape_opengl(renderer, shape->mesh.id, shape);
+            break;
     }
 }
 
-TextureID renderer_load_texture(const char *path) {
-    gl_u32 texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    i32 width, height, channels;
-    stbi_set_flip_vertically_on_load(1);    u8* data = stbi_load(path, &width, &height, &channels, 0);
-    if (data) {
-        gl_u32 format = GL_RGB;
-        gl_u32 internalFormat = GL_RGB;
-
-        if (channels == 4) {
-            format = GL_RGBA;
-            internalFormat = GL_RGBA;
-        } else if (channels == 1) {
-            format = GL_RED;
-            internalFormat = GL_RED;
-        }
-
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else {
-        fprintf(stderr, "Failed to load texture: %s\n", path);
-        return -1;
-    }
-
-    stbi_image_free(data);
-
-    return (TextureID)texture;
-}
 

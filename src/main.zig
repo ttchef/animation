@@ -49,7 +49,8 @@ pub fn main() !void {
     var renderer: c.Renderer = undefined;
     if (c.renderer_init(&renderer, @ptrCast(&getProcAddress))) return error.InitRenderer;
 
-    const texture: i32 = c.renderer_load_texture("res/thorfinn.png");
+    const dragon: c.Mesh = c.renderer_load_obj(&renderer, "res/models/cube.obj");
+    const texture: i32 = c.renderer_load_texture(&renderer, "res/images/thorfinn.png");
 
     main_loop: while (true) {
         while (try window.poll()) |event| switch (event) {
@@ -59,7 +60,7 @@ pub fn main() !void {
             },
             else => {},
         };
-        c.renderer_draw_shape(&renderer, &.{ .type = 1, .color = c.COLOR(0.8, 0.2, 0.2, 1.0), .texture = texture });
+        c.renderer_draw_shape(&renderer, &.{ .type = 2, .color = c.COLOR(1, 1, 1, 1.0), .texture = texture, .mesh = dragon});
         try yes.opengl.swapBuffers(window);
     }
 }

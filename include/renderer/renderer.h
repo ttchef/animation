@@ -23,12 +23,14 @@ typedef struct Renderer {
     gl_u32* VAOS;
     gl_u32* VBOS;
     gl_u32* EBOS;
-    gl_u32* textures;
     gl_u32* programs;
+    gl_u32* textures;
+    gl_u32* meshes;
 } Renderer;
 
 bool renderer_init(Renderer* renderer, GLADloadproc loader);
 void renderer_resize(Renderer* renderer, size_t width, size_t height);
-TextureID renderer_load_texture(const char* path);
+TextureID renderer_load_texture(Renderer* renderer, const char* path);
+Mesh renderer_load_obj(Renderer* renderer, const char* path);
 
 #endif
